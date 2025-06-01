@@ -23,7 +23,7 @@ public class RequestHandler {
             }
             else{
                 String content = "{\"status\":\"success\", \"message\":\"unknown operation\"}";
-                sendResponse(out,new HttpResponse(200, "OK", "application/json", content));
+                sendResponse(out,new HttpResponse(200, "OK", "application/json", content,"any",null));
             }
         }
         catch (IOException e) {
@@ -73,19 +73,19 @@ public class RequestHandler {
             Register register = new Register(request);
             content = register.status();
             boolean created = register.created();
-            if(created) return new HttpResponse(200, "OK", "application/json", content);
-                else return new HttpResponse(409, "Conflict", "application/json", content);
+            if(created) return new HttpResponse(200, "OK", "application/json", content,"/register",null);
+                else return new HttpResponse(409, "Conflict", "application/json", content, "/register",null);
         }
         else if(request.getRequestLine().contains("/login")){
             Login login = new Login(request);
             content = login.status();
             boolean valid = login.valid();
-            if(valid) return new HttpResponse(200, "OK", "application/json", content);
-            else return new HttpResponse(409, "Conflict", "application/json", content);
+            if(valid) return new HttpResponse(200, "OK", "application/json", content, "/login",login.getJWT());
+            else return new HttpResponse(401, "Unauthorized", "application/json", content, "/login",null);
         }
         else {
             content = "{\"status\":\"success\", \"message\":\"unknown operation\"}";
-            return new HttpResponse(200, "OK", "application/json", content);
+            return new HttpResponse(200, "OK", "application/json", content, "any",null);
         }
     }
 
