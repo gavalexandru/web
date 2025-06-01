@@ -31,12 +31,16 @@ public class Login {
 
     public String status(){
         String answer;
-        String jwtToken;
         if(valid){
-            jwtToken = JWT.generateToken(email);
-            answer = "{\"status\":\"success\", \"token\":\"" + jwtToken + "\"}";
+            answer = "{\"status\":\"success\", \"message\":\"User has authenticated with success\"}";
         }
         else answer = "{\"status\":\"failed\", \"message\":\"Incorrect email or password\"}";
         return answer;
     }
+
+    public String getJWT(){
+        String jwt = JWT.generateToken(email);
+        return jwt;
+    }
+
 }
