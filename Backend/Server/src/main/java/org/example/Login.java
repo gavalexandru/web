@@ -31,7 +31,11 @@ public class Login {
 
     public String status(){
         String answer;
-        if(valid) answer = "{\"status\":\"success\", \"message\":\"You have successfully logged in\"}";
+        String jwtToken;
+        if(valid){
+            jwtToken = JWT.generateToken(email);
+            answer = "{\"status\":\"success\", \"token\":\"" + jwtToken + "\"}";
+        }
         else answer = "{\"status\":\"failed\", \"message\":\"Incorrect email or password\"}";
         return answer;
     }
