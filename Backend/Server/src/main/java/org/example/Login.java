@@ -38,9 +38,12 @@ public class Login {
         return answer;
     }
 
-    public String getJWT(){
-        String jwt = JWT.generateToken(email);
-        return jwt;
+    public String getAccessToken(){
+        return JWT.generateAccessToken(email);
+    }
+
+    public String getRefreshToken(){
+        return JWT.generateRefreshToken(email);
     }
 
 }
