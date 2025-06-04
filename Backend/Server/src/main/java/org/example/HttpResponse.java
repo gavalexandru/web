@@ -19,7 +19,26 @@ public class HttpResponse {
     }
 
     public String getHeaders() {
-        if(accessToken != null && refreshToken != null){
+        if(session == "/logout"){
+            return "HTTP/1.1 " + statusCode + " " + statusMessage + "\r\n" +
+                    "Content-Type: " + contentType + "\r\n" +
+                    "Content-Length: " + content.length() + "\r\n" +
+                    "Set-Cookie: access_token=" + "; HttpOnly; Path=/; Max-Age=0\r\n" +
+                    "Set-Cookie: refresh_token=" + "; HttpOnly; Path=/; Max-Age=0\r\n" +
+                    "Cache-Control: no-cache, no-store, must-revalidate\r\n" +
+                    "Pragma: no-cache\r\n" +
+                    "Expires: Thu, 01 Jan 1970 00:00:00 GMT\r\n" + // for deleting cookie
+                    "X-Content-Type-Options: nosniff\r\n" +
+                    "X-Frame-Options: DENY\r\n" +
+                    "X-XSS-Protection: 1; mode=block\r\n" +
+                    "Access-Control-Allow-Origin: http://localhost\r\n" +
+                    "Access-Control-Allow-Methods: GET, POST, OPTIONS\r\n" +
+                    "Access-Control-Allow-Headers: Content-Type\r\n" +
+                    "Access-Control-Allow-Credentials: true\r\n" +
+                    "Connection: close\r\n" +
+                    "\r\n";
+        }
+        else if(accessToken != null && refreshToken != null){
             return "HTTP/1.1 " + statusCode + " " + statusMessage + "\r\n" +
                     "Content-Type: " + contentType + "\r\n" +
                     "Content-Length: " + content.length() + "\r\n" +
