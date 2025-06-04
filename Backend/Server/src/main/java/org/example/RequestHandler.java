@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,24 +36,24 @@ public class RequestHandler {
     }
 
     private HttpRequest parseRequest(BufferedReader in) throws IOException {
-       String requestLine = in.readLine();
-       if (requestLine == null) {
-           throw new IOException("Empty request");
-       }
-       if (requestLine.startsWith("OPTIONS")) {
+        String requestLine = in.readLine();
+        if (requestLine == null) {
+            throw new IOException("Empty request");
+        }
+        if (requestLine.startsWith("OPTIONS")) {
             return null;
-       }
+        }
 
-       List<String> headers = new ArrayList<>();
-       String line;
-       while ((line = in.readLine()) != null && !line.isEmpty()) {
-           headers.add(line);
-       }
+        List<String> headers = new ArrayList<>();
+        String line;
+        while ((line = in.readLine()) != null && !line.isEmpty()) {
+            headers.add(line);
+        }
 
-       Boolean hasAccessToken = false;
-       Boolean hasRefreshToken = false;
-       String accessToken = null;
-       String refreshToken = null;
+        Boolean hasAccessToken = false;
+        Boolean hasRefreshToken = false;
+        String accessToken = null;
+        String refreshToken = null;
         for (String header : headers) {
             if (header.toLowerCase().startsWith("cookie:")) {
                 String cookieHeader = header.substring(header.indexOf(':') + 1).trim();
@@ -80,15 +81,15 @@ public class RequestHandler {
             }
         }
 
-       Boolean hasBody = false;
-       int contentLength = 0;
-       for(String header : headers) {
-           if(header.startsWith("Content-Length:")) {
-               contentLength = Integer.parseInt(header.substring(15).trim());
-               hasBody = true;
-           }
-       }
-       String body = null;
+        Boolean hasBody = false;
+        int contentLength = 0;
+        for(String header : headers) {
+            if(header.startsWith("Content-Length:")) {
+                contentLength = Integer.parseInt(header.substring(15).trim());
+                hasBody = true;
+            }
+        }
+        String body = null;
         if (hasBody) {
             char[] bodyBytes = new char[contentLength];
             in.read(bodyBytes, 0, contentLength);
@@ -99,33 +100,49 @@ public class RequestHandler {
 
     private HttpResponse createResponse(HttpRequest request) {
         String content;
-        if(request.getRequestLine().contains("/register")){
+        String requestLine = request.getRequestLine();
+        String accessToken = request.getAccessToken();
+        String refreshToken = request.getRefreshToken();
+        if(requestLine.contains("/register")){
             Register register = new Register(request);
             content = register.status();
             boolean created = register.created();
             if(created) return new HttpResponse(200, "OK", "application/json", content,"/register",null,null);
-                else return new HttpResponse(409, "Conflict", "application/json", content, "/register",null,null);
+            else return new HttpResponse(409, "Conflict", "application/json", content, "/register",null,null);
         }
-        else if(request.getRequestLine().contains("/login")){
+        else if(requestLine.contains("/login")){
             Login login = new Login(request);
             content = login.status();
             boolean valid = login.valid();
             if(valid) return new HttpResponse(200, "OK", "application/json", content, "/login",login.getAccessToken(), login.getRefreshToken());
             else return new HttpResponse(401, "Unauthorized", "application/json", content, "/login",null,null);
         }
-        else if(request.getRequestLine().contains("/logged")){
-                if(JWT.validateToken(request.getAccessToken())) {
+        else if(requestLine.contains("/logged")) {
+            try{
+                if (accessToken != null && JWT.validateToken(accessToken) && !RevokedUserAccessTokens.isItRevoked(RevokedUserAccessTokens.getUserId(JWT.getEmailFromToken(accessToken)), accessToken, refreshToken)) {
                     content = "{\"status\":\"success\", \"message\":\"valid access token\"}";
-                    return new HttpResponse(200, "OK", "application/json", content,"/logged",null,null);
+                    return new HttpResponse(200, "OK", "application/json", content, "/logged", null, null);
                 }
-                else if(JWT.validateToken(request.getRefreshToken())) {
+                else if (refreshToken != null && JWT.validateToken(refreshToken) && !RevokedUserAccessTokens.isItRevoked(RevokedUserAccessTokens.getUserId(JWT.getEmailFromToken(refreshToken)), accessToken, refreshToken)) {
                     content = "{\"status\":\"success\", \"message\":\"valid refresh token\"}";
-                    return new HttpResponse(200, "OK", "application/json", content,"/logged",JWT.generateAccessToken(JWT.getEmailFromToken(request.getRefreshToken())),null);
+                    return new HttpResponse(200, "OK", "application/json", content, "/logged", JWT.generateAccessToken(JWT.getEmailFromToken(refreshToken)), null);
                 }
-                else{
-                 content = "{\"status\":\"failed\", \"message\":\"User hasn't been authenticated\"}";
-                 return new HttpResponse(401, "Unauthorized", "application/json", content, "/logged",null,null);
             }
+            catch(SQLException e){
+                e.printStackTrace();
+            }
+            content = "{\"status\":\"failed\", \"message\":\"User hasn't been authenticated\"}";
+            return new HttpResponse(401, "Unauthorized", "application/json", content, "/logged",null,null);
+        }
+        else if(requestLine.contains("/logout")) {
+            try{
+                if (refreshToken != null) RevokedUserAccessTokens.addTokens(RevokedUserAccessTokens.getUserId(JWT.getEmailFromToken(refreshToken)), accessToken, refreshToken);
+            }
+            catch(SQLException e){
+                e.printStackTrace();
+            }
+            content = "{\"status\":\"success\", \"message\":\"User has been logged out\"}";
+            return new HttpResponse(200, "OK", "application/json", content,"/logout",null,null);
         }
         else {
             content = "{\"status\":\"success\", \"message\":\"unknown operation\"}";
