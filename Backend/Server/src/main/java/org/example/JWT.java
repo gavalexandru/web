@@ -31,8 +31,9 @@ public class JWT {
     public static boolean validateToken(String token) {
         try {
             SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
-            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
-            return true;
+            Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+            Date expiration = claims.getExpiration();
+            return expiration.after(new Date());
         }
         catch (Exception e) {
             return false;
@@ -41,7 +42,7 @@ public class JWT {
 
     public static String getEmailFromToken(String token) {
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
-        Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJwt(token).getBody();
-        return claims.get("email", String.class);
+        Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+        return claims.getSubject();
     }
 }
