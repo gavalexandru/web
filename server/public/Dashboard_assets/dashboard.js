@@ -46,13 +46,14 @@ const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
 const GOOGLE_DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
 
 const dropbox_clientId = 'ew23aw4zu2gogc9';
-const dropbox_redirectUri = 'http://localhost/Frontend//dashboard'; 
+const dropbox_redirectUri = 'http://localhost:8082/dashboard'; 
 const dropbox_state = generateRandomState();
 localStorage.setItem('oauth_state', dropbox_state);
 const dropbox_authUrl = `https://www.dropbox.com/oauth2/authorize?response_type=code&client_id=${dropbox_clientId}&redirect_uri=${encodeURIComponent(dropbox_redirectUri)}&state=${dropbox_state}`;
 
   selectElement.addEventListener('change', () => {
       alert(selectElement.value);
+      selectElement.value='';
   });
 
     selectGoogleElement.addEventListener('change', () => {
@@ -60,10 +61,12 @@ const dropbox_authUrl = `https://www.dropbox.com/oauth2/authorize?response_type=
         handleAuthClick();
         else
       alert(selectGoogleElement.value);
+      selectGoogleElement.value='';
   });
 
     selectOneDriveElement.addEventListener('change', () => {
       alert(selectOneDriveElement.value);
+      selectOneDriveElement.value='';
   });
 
     selectDropboxElement.addEventListener('change', () => {
@@ -71,6 +74,7 @@ const dropbox_authUrl = `https://www.dropbox.com/oauth2/authorize?response_type=
         window.location.href = dropbox_authUrl;
         else
       alert(selectDropboxElement.value);
+    selectDropboxElement.value='';
   });
 
   function generateRandomState(length = 16) {
