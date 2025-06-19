@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="Dashboard_assets/dashboard.css">
+    <script src="Dashboard_assets/dashboard.js" defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="main-content">
+            <div class="storage-overview">
+                <div class="donut-chart-container">
+                    <div class="donut-chart"></div>
+                    <div class="donut-chart-text">
+                        <span class="amount">112.7 GB</span>
+                        <span class="total">of 150 GB</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="recent-files">
+                <div class="recent-files-header">
+                    <h2>All files</h2>
+                    <label class="add-new-button" for="fileInput">+ Add New</label>
+                    <input type="file" id="fileInput" multiple>
+                </div>
+
+                <div class="files-list">
+                    <div class="files-list-header">
+                        <span class="file-name-header">FILE NAME</span>
+                    </div>
+
+                    <div class="file-item">
+                        <span class="file-name">design proposals.pdf</span>
+                        <div class="file-size-details">
+                            <span class="file-size-value">12.7 MB</span>
+                            <span class="file-size-label">Size</span>
+                        </div>
+                        <span class="file-actions">
+                            <div class="select-wrapper">
+                                <label for="test-select"></label>
+                                <select id="test-select" class="custom-select">
+                                    <option value="Downloading">Download</option>
+                                    <option value="Deleting">Delete</option>
+                                </select>
+                            </div>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="storage-usage">
+                    <h3>Storage usage</h3>
+
+                    <div class="storage-item">
+                        <div class="storage-item-header">
+                            <div class="storage-item-info">
+                                <span class="storage-item-name">Google Drive</span>
+                            </div>
+                            <span class="storage-item-actions">
+                                <div class="select-wrapper">
+                                    <label for="google-select"></label>
+                                    <select id="google-select" class="custom-select">
+                                        <option value="Logging in - Google Drive">Log In</option>
+                                        <option value="Disconnecting - Google Drive">Disconnect</option>
+                                    </select>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: 60%;"></div>
+                        </div>
+                        <div class="storage-item-details" id="google-item-details">
+                            <span>1,996 Files</span>
+                            <span>1,3GB</span>
+                        </div>
+                    </div>
+
+                    <div class="storage-item">
+                        <div class="storage-item-header">
+                            <div class="storage-item-info"> 
+                                <span class="storage-item-name">One Drive</span>
+                            </div>
+                             <span class="storage-item-actions">
+                                <div class="select-wrapper">
+                                    <label for="onedrive-select"></label>
+                                    <select id="onedrive-select" class="custom-select">
+                                        <option value="Logging in - One Drive">Log In</option>
+                                        <option value="Disconnecting - One Drive">Disconnect</option>
+                                    </select>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: 85%;"></div>
+                        </div>
+                        <div class="storage-item-details" id="onedrive-item-details">
+                            <span>4,006 Files</span>
+                            <span>12,5GB</span>
+                        </div>
+                    </div>
+
+                    <div class="storage-item">
+                        <div class="storage-item-header">
+                            <div class="storage-item-info">
+                                <span class="storage-item-name">DropBox</span>
+                            </div>
+                             <span class="storage-item-actions">
+                                <div class="select-wrapper">
+                                    <label for="dropbox-select"></label>
+                                    <select id="dropbox-select" class="custom-select">
+                                        <option value="Logging in - Dropbox">Log In</option>
+                                        <option value="Disconnecting - Dropbox">Disconnect</option>
+                                    </select>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: 15%;"></div>
+                        </div>
+                        <div class="storage-item-details" id="dropbox-item-details">
+                            <span>214 Files</span>
+                            <span>0,4GB</span>
+                        </div>
+                    </div>
+                    <button class="add-new-button" onclick="logout()">Log Out</button>
+                </div>
+            </div>
+        </div>
+        <div id="response-overlay">
+            <div id="error-popup-content" class="error-popup">
+                <div class="error-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </div>
+                <h2 id="error-title">Error!</h2>
+                <p id="error-message">An unexpected error occurred.</p>
+                <button id="error-try-again-button" class="try-again-button" type="button">Return to Login</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
