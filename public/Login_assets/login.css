@@ -1,0 +1,239 @@
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background-color: #F7F8FA;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px;
+            padding: 20px; 
+            box-sizing: border-box;
+            text-align: center; 
+        }
+
+        .container h1 {
+            font-size: 34px;
+            font-weight: 600;
+            color: #1D2429;
+            margin-bottom: 35px;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 18px;
+            text-align: left; 
+        }
+
+        .login-form label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4A5568; 
+            margin-bottom: 6px; 
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #CBD5E0; 
+            border-radius: 4px; 
+            font-size: 15px;
+            box-sizing: border-box; 
+            color: #2D3748;
+        }
+
+        .login-form input {
+            color: #2D3748; 
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 1px #8B5CF6;
+        }
+
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #8B5CF6;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 4px; 
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 10px; 
+            margin-bottom: 25px; 
+            transition: background-color 0.2s;
+        }
+
+        .login-btn:hover {
+            background-color: #7C3AED;
+        }
+
+        .signup-prompt {
+            font-size: 14px;
+            color: #555e69;
+            text-align: center;
+        }
+
+        .signup-prompt a {
+            color: #8B5CF6;
+            font-weight: 500; 
+            text-decoration: none;
+        }
+
+        .signup-prompt a:hover {
+            text-decoration: underline;
+        }
+
+        #response-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            font-size: 1.2em;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .success-popup {
+            background-color: white;
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #28a745;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .success-icon svg {
+            width: 30px;
+            height: 30px;
+            stroke: white;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+
+        .success-popup h2 {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+
+        .success-popup p {
+            font-size: 0.95em;
+            color: #555;
+            margin: 0 0 20px 0;
+            word-break: break-word; 
+        }
+
+        .success-popup .completed-button {
+            background-color: #00c853;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 0;
+            width: 100%;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .success-popup .completed-button:hover {
+            background-color: #00b049;
+        }
+
+        .error-popup {
+            background-color: white;
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%; 
+            max-width: 320px; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .error-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #dc3545; 
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .error-icon svg {
+            width: 30px;
+            height: 30px;
+            stroke: white;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+
+        .error-popup h2 {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 5px 0;
+        }
+
+        .error-popup p {
+            font-size: 0.95em;
+            color: #555;
+            margin: 0 0 20px 0;
+            word-break: break-word; 
+        }
+
+        .error-popup .try-again-button {
+            background-color: #d9534f; 
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 0; 
+            width: 100%; 
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .error-popup .try-again-button:hover {
+            background-color: #c9302c;
+        }
