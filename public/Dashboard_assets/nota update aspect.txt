@@ -1,1 +1,0 @@
-fa un fetch(POST) in care ceri date
