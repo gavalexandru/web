@@ -31,6 +31,9 @@ errorTryAgainButton.addEventListener("click", hideOverlayAndPopups);
 
 
 async function signup() {
+    successPopup.style.display = 'none';
+    errorPopup.style.display = 'none';
+
     let email = document.getElementById("email").value;
     let password = document.getElementById("pass").value;
     let password2 = document.getElementById("pass-conf").value;
@@ -62,8 +65,6 @@ async function signup() {
         overlay.style.display = 'flex';
         return;
     }
-    successPopup.style.display = 'none';
-    errorPopup.style.display = 'none';
 
     try {
         const response = await fetch('http://localhost:8082/api/register', {

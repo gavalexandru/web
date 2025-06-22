@@ -15,31 +15,37 @@
                 <div class="donut-chart-container">
                     <div class="donut-chart"></div>
                     <div class="donut-chart-text">
-                        <span class="amount">112.7 GB</span>
-                        <span class="total">of 150 GB</span>
+                        <span class="amount">0 GB</span>
+                        <span class="total">of 0 GB</span>
                     </div>
                 </div>
             </div>
             
             <div class="recent-files">
                 <div class="recent-files-header">
-                    <h2>All files</h2>
-                    <label class="add-new-button" for="fileInput">+ Add New</label>
-                    <input type="file" id="fileInput" multiple>
-                </div>
+					<h2>All files</h2>
+
+						
+						<button class="add-new-button" id="addNewButton">+ Add New</button>
+
+					
+						<input type="file" id="fileInput" class="hidden" multiple>
+						<input type="file" id="folderInput" class="hidden" webkitdirectory multiple>
+			</div>
 
                 <div class="files-list">
                     <div class="files-list-header">
                         <span class="file-name-header">FILE NAME</span>
                     </div>
 
-                    <div class="file-item">
+                    <div class="file-item" id="file-item-template">
+                        <img src="./Dashboard_assets/dropbox.png" alt="dropbox" class="provider-image">
                         <span class="file-name">design proposals.pdf</span>
                         <div class="file-size-details">
-                            <span class="file-size-value">12.7 MB</span>
+                            <span class="file-size-value">0 MB</span>
                             <span class="file-size-label">Size</span>
                         </div>
-                        <span class="file-actions">
+                        <div class="file-actions">
                             <div class="select-wrapper">
                                 <label for="test-select"></label>
                                 <select id="test-select" class="custom-select">
@@ -47,7 +53,7 @@
                                     <option value="Deleting">Delete</option>
                                 </select>
                             </div>
-                        </span>
+                        </div>
                     </div>
 
                 </div>
@@ -62,7 +68,7 @@
                             <div class="storage-item-info">
                                 <span class="storage-item-name">Google Drive</span>
                             </div>
-                            <span class="storage-item-actions">
+                            <div class="storage-item-actions">
                                 <div class="select-wrapper">
                                     <label for="google-select"></label>
                                     <select id="google-select" class="custom-select">
@@ -70,14 +76,14 @@
                                         <option value="Disconnecting - Google Drive">Disconnect</option>
                                     </select>
                                 </div>
-                            </span>
+                            </div>
                         </div>
                         <div class="progress-bar-container">
-                            <div class="progress-bar-fill" style="width: 60%;"></div>
+                            <div class="progress-bar-fill" id="google-bar-fill"></div>
                         </div>
                         <div class="storage-item-details" id="google-item-details">
-                            <span>1,996 Files</span>
-                            <span>1,3GB</span>
+                            <span id="google-item-count">0 Files</span>
+                            <span id="google-space">0 GB</span>
                         </div>
                     </div>
 
@@ -86,7 +92,7 @@
                             <div class="storage-item-info"> 
                                 <span class="storage-item-name">One Drive</span>
                             </div>
-                             <span class="storage-item-actions">
+                             <div class="storage-item-actions">
                                 <div class="select-wrapper">
                                     <label for="onedrive-select"></label>
                                     <select id="onedrive-select" class="custom-select">
@@ -94,14 +100,14 @@
                                         <option value="Disconnecting - One Drive">Disconnect</option>
                                     </select>
                                 </div>
-                            </span>
+                            </div>
                         </div>
                         <div class="progress-bar-container">
-                            <div class="progress-bar-fill" style="width: 85%;"></div>
+                            <div class="progress-bar-fill" id="onedrive-bar-fill"></div>
                         </div>
                         <div class="storage-item-details" id="onedrive-item-details">
-                            <span>4,006 Files</span>
-                            <span>12,5GB</span>
+                            <span id="onedrive-item-count">0 Files</span>
+                            <span id="onedrive-space">0 GB</span>
                         </div>
                     </div>
 
@@ -110,7 +116,7 @@
                             <div class="storage-item-info">
                                 <span class="storage-item-name">DropBox</span>
                             </div>
-                             <span class="storage-item-actions">
+                             <div class="storage-item-actions">
                                 <div class="select-wrapper">
                                     <label for="dropbox-select"></label>
                                     <select id="dropbox-select" class="custom-select">
@@ -118,14 +124,14 @@
                                         <option value="Disconnecting - Dropbox">Disconnect</option>
                                     </select>
                                 </div>
-                            </span>
+                            </div>
                         </div>
                         <div class="progress-bar-container">
-                            <div class="progress-bar-fill" style="width: 15%;"></div>
+                            <div class="progress-bar-fill" id="dropbox-bar-fill"></div>
                         </div>
                         <div class="storage-item-details" id="dropbox-item-details">
-                            <span>214 Files</span>
-                            <span>0,4GB</span>
+                            <span id="dropbox-item-count">0 Files</span>
+                            <span id="dropbox-space">0 GB</span>
                         </div>
                     </div>
                     <button class="add-new-button" onclick="logout()">Log Out</button>
@@ -133,6 +139,32 @@
             </div>
         </div>
         <div id="response-overlay">
+			    <div id="upload-choice-popup" class="provider-popup"> 
+				<h2>Add New</h2>
+			<p>What would you like to upload?</p>
+				<div class="provider-options">
+				<button class="provider-button" id="uploadFilesButton">
+                <span class="item-icon icon-file"></span>
+                <span>File(s)</span>
+				</button>
+				<button class="provider-button" id="uploadFolderButton">
+                <span class="item-icon icon-folder"></span>
+                <span>A Folder</span>
+				</button>
+			</div>
+        <button id="cancel-choice-button" class="cancel-button">Cancel</button>
+    </div>
+            <div id="success-popup-content" class="success-popup">
+                <div class="success-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <h2 id="success-title">Success!</h2>
+                <p id="success-message">Your action was completed.</p>
+                <button id="success-completed-button" class="completed-button" type="button">Close</button>
+            </div>
+
             <div id="error-popup-content" class="error-popup">
                 <div class="error-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -143,6 +175,27 @@
                 <h2 id="error-title">Error!</h2>
                 <p id="error-message">An unexpected error occurred.</p>
                 <button id="error-try-again-button" class="try-again-button" type="button">Return to Login</button>
+            </div>
+		    <div id="upload-provider-popup" class="provider-popup"> 
+                <h2>Upload to...</h2>
+                <p>Select a cloud provider to upload your files to.</p>
+                <div class="provider-options">
+                    <button class="provider-button" data-provider="google">
+                                    <span class="provider-icon icon-google"></span>
+            <span>Google Drive</span>
+        </button>
+        <button class="provider-button" data-provider="onedrive">
+           
+            <span class="provider-icon icon-onedrive"></span>
+            <span>OneDrive</span>
+        </button>
+        <button class="provider-button" data-provider="dropbox">
+            
+            <span class="provider-icon icon-dropbox"></span>
+            <span>Dropbox</span>
+                    </button>
+                </div>
+                <button id="cancel-upload-button" class="cancel-button">Cancel</button>
             </div>
         </div>
     </div>

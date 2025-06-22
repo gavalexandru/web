@@ -31,6 +31,9 @@ errorTryAgainButton.addEventListener("click", hideOverlayAndPopups);
 
 
 async function login() {
+    successPopup.style.display = 'none';
+    errorPopup.style.display = 'none';
+    
     let email = document.getElementById("email").value;
     let password = document.getElementById("pass").value;
     if (email === "" || email == null) {
@@ -54,9 +57,6 @@ async function login() {
         overlay.style.display = 'flex';
         return;
     }
-
-    successPopup.style.display = 'none';
-    errorPopup.style.display = 'none';
 
     try {
         const response = await fetch('http://localhost:8082/api/login', {
