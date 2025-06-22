@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const apiRequestHandler = require('./routes/routes');
+const { parse } = require('url'); 
 
 require('dotenv').config({ path: __dirname + '/../.env' });
 const PORT = process.env.PORT;
@@ -13,9 +14,11 @@ const server = http.createServer((req, res) => {
     return apiRequestHandler(req, res);
   }
 
+  const { pathname } = parse(req.url); 
+
   let fileToServe;
 
-  switch (req.url) {
+  switch (pathname) { 
     case '/':
     case '/login':
       fileToServe = 'login.html';
@@ -23,14 +26,18 @@ const server = http.createServer((req, res) => {
     case '/signup':
       fileToServe = 'signup.html';
       break;
-    case '/dashboard':
+    case '/dashboard': 
       fileToServe = 'dashboard.html';
       break;
+	case '/userGuide':
+	  fileToServe = 'userGuide.html';
+	  break;
     default:
-   
-      fileToServe = req.url;
+      
+      fileToServe = pathname; 
       break;
   }
+
 
   let filePath = path.join(__dirname, '..', 'public', fileToServe);
 
