@@ -1,0 +1,150 @@
+      
+<!DOCTYPE html>
+<html lang="en" prefix="schema: http://schema.org/">
+<head>
+  <meta charset="utf-8">
+  <title>Universal Storage Web Tool - User Guide</title>
+  <link rel="stylesheet" href="./User_assets/stylesheet.css"> <!--  https://w3c.github.io/scholarly-html/css/scholarly.min.css -->
+  <style>
+    dt { 
+	font-weight: bold; 
+	}
+    dd { 
+	margin-bottom: 1em; 
+	}
+    code { 
+	background-color: #f0f0f0; 
+	padding: 2px 4px; 
+	border-radius: 3px; 
+	font-family: monospace; 
+	}      
+
+  </style>
+</head>
+<body typeof="schema:Chapter">
+  <header>
+    <h1 property="schema:name">Universal Storage Web Tool - User Guide</h1>
+  </header>
+  
+  <section id="table-of-contents">
+    <h2>Table of Contents</h2>
+    <ol>
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#registration">Registration and Authentication</a></li>
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#uploading">Uploading</a></li>
+        <li><a href="#storage">File Storage and Distribution</a></li>
+        <li><a href="#downloading">Downloading</a></li>
+        <li><a href="#filesystem">File Management</a></li>
+        <li><a href="#connections">Connecting Your Cloud Accounts</a></li>
+        <li><a href="#team">Team Members</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+    </ol>
+  </section>
+
+  <section id="introduction">
+    <h2>Introduction</h2>
+    <p>This document serves as a User Guide for the <strong>Universal Storage Web Tool</strong>. This application is designed to be intuitive, and its use does not require extensive technical knowledge. However, this guide serves to inform users about all the features and options available within the tool.</p>
+    <p>The primary goal of the Universal Storage Web Tool is to provide a single, unified interface to manage files across multiple cloud storage providers, allowing you to overcome individual storage limits and simplify your digital life.</p>
+  </section>
+
+  <section id="registration">
+    <h2>Registration and Authentication</h2>
+    <p>Access to the Universal Storage Web Tool platform is restricted to registered users. The application provides two distinct pages for access control:</p>
+    <ul>
+        <li><strong>Login Page:</strong> If you already have an account, you can log in directly using your email address and password.</li>
+        <li><strong>Register Page:</strong> If you are a new user, you can click the link to the sign up page. An account can be created by providing a valid email address and choosing a password.</li>
+    </ul>
+    <p>After registering, you will be able to log in to the platform with your new credentials and will be automatically redirected to the main Dashboard.</p>
+  </section>
+
+  <section id="dashboard">
+    <h2>Dashboard</h2>
+    <p>Once you log in, you will land on the Dashboard. This page is the central hub for all activities within the application. From here, you can access every feature without needing to navigate to different pages.</p>
+    <p>The Dashboard is organized into several key sections:</p>
+    <ul>
+        <li><strong>Cloud Connections:</strong> This area allows you to connect to or disconnect from your supported cloud services (Google Drive, OneDrive, Dropbox).</li>
+        <li><strong>Storage Statistics:</strong> Here, you can see a clear overview of your storage usage. It displays how much space is used versus the total available for each individual cloud, as well as an aggregated total of all your connected accounts.</li>
+        <li><strong>File Management Area:</strong> This is the main part of the page, where you can see all the files and folders you have uploaded through the tool. You can initiate uploads, downloads, and deletions directly from this interface.</li>
+        <li><strong>Logout:</strong> A clearly visible button allows you to securely log out of your account.</li>
+    </ul>
+	    <p>The storage visualization includes:</p>
+    <ul>
+        <li><strong>Donut Chart:</strong> Shows your aggregate storage usage across all connected providers</li>
+        <li><strong>Provider Bars:</strong> Individual progress bars for each connected service (Google Drive, OneDrive, Dropbox)</li>
+        <li><strong>Detailed Stats:</strong> Exact byte counts and file quantities for each provider</li>
+    </ul>
+  </section>
+
+  <section id="uploading">
+    <h2>Uploading</h2>
+    <p>The upload process preserves your complete folder structures:</p>
+    <ul>
+        <li>Nested folders are recreated exactly in your cloud storage</li>
+        <li>Relative file paths are maintained</li>
+        <li>Special characters in file/folder names are properly handled</li>
+    </ul>
+    <p>During upload you can:</p>
+    <ul>
+        <li>Select multiple files from different folders</li>
+        <li>Upload entire folder trees with their contents</li>
+        <li>Choose which cloud provider should store the files</li>
+    </ul>
+</section>
+
+  <section id="storage">
+    <h2> File Storage and Distribution</h2>
+    <p>The Universal Storage Web Tool maintains your complete files on each connected cloud service while preserving their original folder structures. When you upload a file or folder:</p>
+    <ul>
+        <li>The entire file is stored intact on your selected cloud provider</li>
+        <li>Folder hierarchies are exactly replicated in the cloud storage</li>
+        <li>Metadata is stored in our database to track file locations</li>
+    </ul>
+    <p>This approach provides several advantages:</p>
+    <ul>
+        <li>Your files remain fully accessible directly through each cloud provider</li>
+        <li>No proprietary file formats or transformations are used</li>
+        <li>Folder structures are maintained exactly as you organized them</li>
+    </ul>
+</section>
+
+
+  <section id="downloading">
+    <h2> Downloading</h2>
+    <p>The download process is the seamless reverse of uploading. When you request to download a file or folder from the Dashboard, you are not just downloading a simple file.</p>
+    <p>Instead, you send a request to the tool's server, which then automatically locates all the necessary segments from your connected clouds. It retrieves them, verifies their integrity, and reassembles them in the correct order to perfectly reconstruct the original file. The complete, original file is then delivered to your computer for you to save.</p>
+  </section>
+
+  <section id="filesystem">
+    <h2>File Management</h2>
+    <p>The application provides a clean and familiar file and folder structure. It's important to understand that the tool doesn't store your files directly on its servers.</p>
+    <p>Instead, it maintains a lightweight and efficient list of your "virtual" files and folders. This list contains only metadata: the file names, sizes, and a map of where each segment is located across your clouds. This approach makes managing your file structure incredibly fast and ensures your data remains on your own cloud accounts.</p>
+  </section>
+
+  <section id="connections">
+    <h2>Connecting Your Cloud Accounts</h2>
+    <p>Currently, the Universal Storage Web Tool allows you to connect to three different cloud services: <strong>Google Drive</strong>, <strong>Microsoft OneDrive</strong>, and <strong>Dropbox</strong>.</p>
+    <p>The connection with these external applications is created using the <strong>OAuth 2.0</strong> protocol, which is the industry standard for secure authorization. When you first connect a drive, you will be redirected to that service's official login page to grant permission. This means <strong>we never see or store your cloud account passwords</strong>. The service provides our application with a secure access token, which you can revoke at any time from the Dashboard.</p>
+  </section>
+
+  <section id="team">
+    <h2>Team Members</h2>
+    <ul>
+        <li>
+            Gavril Alexandru<br>
+        </li>
+        <li>
+            Mazare Stefan<br>
+        </li>
+    </ul>
+  </section>
+
+  <section id="conclusion">
+    <h2>Conclusion</h2>
+    <p>In conclusion, the Universal Storage Web Tool is a powerful utility for anyone looking to make the most of their available cloud storage. It helps you overcome storage limits by combining accounts and provides a simple, secure interface to manage all your distributed files as if they were in one place.</p>
+  </section>
+
+</body>
+</html>
+
+    
