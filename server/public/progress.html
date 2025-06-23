@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" prefix="schema: http://schema.org/">
+<head>
+  <meta charset="utf-8">
+  <title>Universal Storage Web Tool - User Guide</title>
+  <link rel="stylesheet" href="./Progress_assets/stylesheet.css">
+</head>
+
+<body typeof="schema:chapter">
+    <header>
+        <h1 property="schema:name">Universal Storage Web Tool - Progress & Architecture Report</h1>
+    </header>
+
+    <section id="table-of-contents">
+        <h2>Table of Contents</h2>
+        <ol>
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#architecture">Architecture</a></li>
+            <li><a href="#technologies">Technologies</a></li>
+            <li><a href="#progress">Progress</a></li>
+            <li><a href="#server+router">Server and Router</a></li>
+            <li><a href="#database">Database</a></li>
+            <li><a href="#login+register+security">Login, register and security</a></li>
+            <li><a href="#cloudAPIs">Cloud APIs</a></li>
+            <li><a href="#code_hosting">Code hosting</a></li>
+        </ol>
+    </section>
+
+    <section id="introduction">
+        <h2>Introduction</h2>
+        <p>This document serves to inform the reader about the architecture and the work in the making of the <strong>Universal Storage Web Tool(UST for short)</strong>.</p>
+        <p>The goal of UST is to provide a gateway, connecting three different cloud providers(Google Drive, One Drive and Dropbox) together, offering the user the ability to upload, download & delete files from any service that the user is connected to.</p>
+    </section>
+
+    <section id="features">
+        <h2>Features</h2>
+        <p>While the application offers the user the possibility to upload, download and delete files from different cloud providers, it also has some other, secondary functionalities. These are:</p>
+        <ul>
+            <li>Login</li>
+            <li>Register</li>
+            <li>Cloud Login & Sign Out - change which cloud providers you want to be able to be accessed from the UST</li>
+            <li>Cloud Statistics - view how many files you uploaded to every cloud service you are connected to, as well as used and total space</li>
+        </ul>
+    </section>
+
+    <section id="architecture">
+        <h2>Architecture</h2>
+        <p>The application uses a (micro)service architecture, presented below</p>
+        <img class="image" id="app_diagram" src="./Progress_assets/(Micro)Services.png" alt="Architecture">
+    </section>
+
+    <section id="technologies">
+        <h2>Technologies</h2>
+        <p>We used HTML, CSS and JavaScript for developing the frontend</p>
+        <p>For the backend, Node.js, PostgreSQL, OAuth 2.0 and JWT were used in developing the application</p>
+    </section>
+
+    <section id="progress">
+        <h2>Progress</h2>
+        <p2>Here we include some in-development photos of the application</p2>
+        <img class="image" id="color_image" src="./Progress_assets/color.png" alt="Color change">
+        <label for="color_image">A proposed color change</label>
+        <p></p>
+        <img class="image" id="dashboard_image" src="./Progress_assets/olddashboard.png" alt="Old dashboard">
+        <label for="dashboard_image">An old design for the dashboard page(that never left the mockup phase)</label>
+        <p></p>
+        <img class="image" id="popup_image" src="./Progress_assets/icon_old.webp" alt="Old popup">
+        <label for="popup_image">One of the initial styles for the popups</label>
+        <p></p>
+        <img class="image" id="provider_image" src="./Progress_assets/provider_center.webp" alt="Old providers">
+        <label for="provider_image">An attempt at trying to center the provider images</label>
+    </section>
+
+    <section id="server+router">
+        <h2>Server and router</h2>
+        <p>The backend is built upon Node.js's native <code>http</code> module, providing a lightweight and dependency-free foundation. The server's primary role, as defined in <code>server.js</code>, is twofold: to serve static front-end assets (HTML, CSS, JS) from a <code>public</code> directory and to delegate all API-related traffic to a central request handler.</p>
+        <p>The routing logic is managed in <code>routes.js</code>, which acts as a procedural router. It employs a series of <code>if-else if</code> blocks to match the incoming request's URL and HTTP method. A key function of this router is to act as a security gateway. For protected endpoints, it first parses the <code>HttpOnly</code> cookie to extract the JWT, authenticates the user via a call to <code>user.checkAuth()</code>, and only then proceeds to the relevant handler. This ensures that all business logic and data access operations are performed on behalf of an authenticated user.</p>
+        <p>The server is a collection of API endpoints, which are handled by dedicated modules for user management, cloud operations, and file transfers.</p>
+        <h3>API Endpoints:</h3>
+        <ul>
+            <li><strong>POST</strong> <code>/api/register</code>: Receives <code>email</code> and <code>password</code>. Calls the <code>register</code> method in the User handler (<code>user.js</code>). The handler hashes the password using <code>bcrypt</code> and stores the new user in the <code>users</code> table in the PostgreSQL database. Returns a success message or an error if the email already exists (HTTP 409).</li>
+            <li><strong>POST</strong> <code>/api/login</code>: Receives <code>email</code> and <code>password</code>. Calls the <code>login</code> method in the User handler. Authenticates the user by comparing the provided password against the stored hash using <code>bcrypt</code>. Upon success, generates a JWT containing the user's ID and email. This token is set in a secure, <code>HttpOnly</code> cookie with a 1-hour expiration.</li>
+            <li><strong>POST</strong> <code>/api/logged</code>: A simple endpoint to verify if the user's session is active. It validates the JWT from the cookie. Returns <code>{ "authorized": true }</code> on success and <code>{ "authorized": false }</code> on failure, allowing the frontend to manage session state.</li>
+            <li><strong>POST</strong> <code>/api/logout</code>: Calls the <code>logout</code> method in the User handler. Adds the user's current JWT to a <code>revoked_tokens</code> table in the database to invalidate it immediately. Instructs the browser to clear the <code>access_token</code> cookie.</li>
+            <li><strong>GET/POST</strong> <code>/api/[google|dropbox|onedrive]/...</code>: A group of routes handled by <code>cloud.js</code> for managing cloud service connections. Endpoints include <code>/login</code>, <code>/logged</code>, and <code>/logout</code>. All requests are authenticated via the user's main JWT.</li>
+            <li><strong>POST</strong> <code>/api/upload?provider=[provider_name]</code>: Handles file and folder uploads to a specified cloud provider. The handler (<code>upload.js</code>) manually parses <code>multipart/form-data</code> to extract files, invokes the corresponding provider-specific handler, and stores metadata for each new item in the <code>storage</code> database table.</li>
+            <li><strong>GET</strong> <code>/api/cloud-files</code>: Retrieves the user's entire file and folder hierarchy from the local <code>storage</code> database table. For folders, it executes a recursive SQL query to calculate the total size of all nested content.</li>
+            <li><strong>GET</strong> <code>/api/storage-details</code>: Aggregates storage statistics. It queries the local database for file counts and makes live API calls to each cloud provider to fetch real-time used and total storage space.</li>
+            <li><strong>GET</strong> <code>/api/download/:provider/:itemId</code>: Manages file and folder downloads. If the item is a file, it streams it directly from the cloud. If it is a folder, it uses the <code>archiver</code> library to create a <code>.zip</code> file on-the-fly, streaming all nested files into the archive.</li>
+            <li><strong>DELETE</strong> <code>/api/delete/:provider/:itemId</code>: Handles item deletion. It first calls the cloud provider's API to delete the item, then executes a recursive <code>DELETE</code> query on the local <code>storage</code> table to remove the item and its descendants, maintaining synchronization.</li>
+        </ul>
+    </section>
+
+    <section id="database">
+        <h2>Database</h2>
+        <p>We chose a PostgreSQL database, accessed via the <code>pg</code> library, for its robustness, reliability, and support for complex queries. The database stores all user data, cloud API tokens, and a synchronized representation of the user's file structure across all linked services.</p>
+        <h3>Tables:</h3>
+        <img class="image" id="database_schema" src="./Progress_assets/database_schema.png" alt="Database schema">
+        <ul>
+            <li><strong>users</strong>: Stores core user information: <code>user_id</code> (auto-incrementing primary key), <code>email</code> (unique), and the <code>password</code> (hashed with bcrypt).</li>
+            <li><strong>cloud_tokens</strong>: Securely stores the OAuth 2.0 tokens for each cloud service a user connects. Fields include <code>user_id</code>, <code>provider</code>, <code>access_token</code>, and <code>refresh_token</code>. A composite primary key on (<code>user_id</code>, <code>provider</code>) ensures a user has only one token set per service.</li>
+            <li><strong>storage</strong>: Acts as a local cache and source of truth for the user's file and folder hierarchy. Stores <code>user_id</code>, <code>provider</code>, <code>item_id</code> (from the cloud provider), <code>parent_provider_id</code>, <code>item_type</code> ('file' or 'folder'), <code>item_name</code>, and <code>item_size</code>.</li>
+            <li><strong>revoked_tokens</strong>: Supports our secure logout functionality. When a user logs out, their JWT is added to this table. The <code>checkAuth</code> function queries this table to ensure a token has not been revoked, preventing its use even if it has not yet expired.</li>
+        </ul>
+    </section>
+
+    <section id="login+register+security">
+        <h2>Login, register and security</h2>
+        <p>User authentication and authorization are central to the application's security model. The entire process is managed by <code>user.js</code> and <code>jwt.js</code>.</p>
+        <p><strong>Registration & Login</strong>: The registration flow requires a valid email and a password. Passwords are never stored in plaintext; they are salted and hashed using <code>bcrypt</code>. The login process validates credentials by comparing the hash of the provided password with the one stored in the database.</p>
+        <p><strong>Authorization</strong>: Upon successful login, a JSON Web Token (JWT) is generated. This token, signed with a secret key from a <code>.env</code> file, contains the user's ID and email. It is sent to the client in an <strong><code>HttpOnly</code> cookie</strong>, a critical security measure to mitigate cross-site scripting (XSS) attacks by preventing client-side JavaScript from accessing the token.</p>
+        <p><strong>Authenticated Requests</strong>: For every subsequent request to a protected endpoint, the server extracts and verifies the JWT. Our <code>user.checkAuth</code> function first checks if the token exists in the <code>revoked_tokens</code> table. If not, it verifies the token's signature and expiration. If the token is valid, the request proceeds; otherwise, an HTTP 401 Unauthorized error is returned, prompting the frontend to redirect the user to the login page.</p>
+    </section>
+
+    <section id="cloudAPIs">
+        <h2>Cloud APIs</h2>
+        <p>Integration with Google Drive, Dropbox, and OneDrive is a core feature. Our architecture isolates the logic for each service into its own dedicated module (<code>google.js</code>, <code>dropbox.js</code>, <code>onedrive.js</code>) to manage the distinct requirements of their APIs.</p>
+        <p><strong>OAuth 2.0 and Token Management</strong>: Each cloud module handles the complete OAuth 2.0 authorization code flow. When a user connects a service, the server exchanges the received code for an <code>access_token</code> and <code>refresh_token</code>. These are stored in the <code>cloud_tokens</code> database table.</p>
+        <p><strong>Automatic Token Refresh</strong>: A key architectural decision was to implement a robust, automatic token refresh mechanism. Before performing any critical API call, the system first validates the access token. If the API returns a 401 error indicating an expired token, the handler automatically uses the stored <code>refresh_token</code> to request a new <code>access_token</code> from the provider. The new token is saved to the database, and the original operation is retried transparently. This provides a seamless user experience.</p>
+        <p><strong>Unified Interface</strong>: While each module is self-contained, they expose a consistent set of functions (e.g., <code>handleUpload</code>, <code>getDownloadStream</code>, <code>handleDelete</code>) that are called by the main operation handlers. This approach simplifies the primary business logic. For uploads, the handlers are responsible for recursively creating any necessary parent folders that do not already exist in the cloud drive.</p>
+    </section>
+
+    <section id="code_hosting">
+        <h2>Code hosting</h2>
+        <p>For code hosting & management, we used Github. We did so in order to have an easier time keeping track of implemented code.</p>
+        <a href="https://github.com/gavalexandru/web/tree/main" target="_blank" rel="noopener noreferrer">Github</a>
+    </section>
+</body>
+</html>
