@@ -5,7 +5,7 @@
 - Gavril Alexandru  
 - Mazare Stefan  
 
-**Presentation video:**  [https://github.com/gavalexandru/web/tree/main/documentation](https://youtu.be/fFEcOdjVfUE)
+**Presentation video:**  [https://youtu.be/fFEcOdjVfUE](https://youtu.be/fFEcOdjVfUE)
 
 **Documentation:** [https://github.com/gavalexandru/web/tree/main/documentation](https://github.com/gavalexandru/web/tree/main/documentation)  
 
